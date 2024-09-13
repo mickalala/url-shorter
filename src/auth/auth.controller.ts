@@ -12,12 +12,13 @@ export class AuthController {
     @Post("sign-up")
     @HttpCode(HttpStatus.CREATED)
     signUp(@Body() signUpDto: SignUpDto) {
+        return this.authService.signUp(signUpDto);
     }
 
     // login
     @Post("sign-in")
     @HttpCode(HttpStatus.OK)
     signIn(@Body() signInDto: SignInDto) {
-
+        return this.authService.signIn(signInDto);
     }
 }
