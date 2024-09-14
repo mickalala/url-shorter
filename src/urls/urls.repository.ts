@@ -11,7 +11,7 @@ export class UrlsRepository {
     create(createUrlDto: CreateUrlDto, userId: number, shortUrl: string) {
         return this.prisma.urls.create({
             data: {
-                 userId,
+                userId,
                 ...createUrlDto,
                 shortUrl,
             }
@@ -24,24 +24,30 @@ export class UrlsRepository {
         return urls
     }
 
+    async findOneUrl(shortUrl: string) {
+        const url = await this.prisma.urls.findUnique({
+            where: { shortUrl }
+        });
+        return url;
+    }
     async findOne(id: number) {
         const url = await this.prisma.urls.findUnique({
             where: { id }
         });
-
         return {
             ...url
         }
     }
 
 
-    update(id: number, updateCredentialDto: UpdateUrlDto) {
-        // return this.prisma.urls.update({
-        //   where: { id },
-        //   data: {
-        //     ...UpdateUrlDto
-        //   }
-        // })
+    update(id: number, updateUrlDto: UpdateUrlDto) {
+        return this.prisma.urls.update({
+          where: { id },
+          data: {
+            ...updateUrlDto,
+            updatedAt: new Date()
+          }
+        })
     }
 
     remove(id: number) {

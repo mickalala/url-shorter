@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Redirect, Header } from '@nestjs/common';
 import { UrlsService } from './urls.service';
 import { CreateUrlDto } from './dto/create-url.dto';
 import { UpdateUrlDto } from './dto/update-url.dto';
@@ -10,8 +10,16 @@ export class UrlsController {
   constructor(private readonly urlsService: UrlsService) { }
 
   @Post()
-  create(@User() user: UserPrisma, @Body() createUrlDto: CreateUrlDto) {
+  create(@Body() createUrlDto: CreateUrlDto, @User() user?: UserPrisma,) {
     return this.urlsService.create(createUrlDto, user);
+  }
+
+  @Get('/short/:shortUrlId')
+  @Redirect('', 301)
+  @Header('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate')
+  async redirectToOriginalUrl(@Param('shortUrlId') shortUrlId: string) {
+    const originalUrl = await this.urlsService.findOriginalUrl(`http://localhost/${shortUrlId}`);
+    return { url: originalUrl };
   }
 
   @Get()
