@@ -1,16 +1,19 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Redirect, Header } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Redirect, Header, UseGuards } from '@nestjs/common';
 import { UrlsService } from './urls.service';
 import { CreateUrlDto } from './dto/create-url.dto';
 import { UpdateUrlDto } from './dto/update-url.dto';
 import { User as UserPrisma } from "@prisma/client";
 import { User } from 'src/decorators/user.decorator';
+import { AuthGuard } from 'src/guards/auth.guards';
+import { OptionalJwtAuthGuard } from 'src/guards/optionalAuth.guards';
 
 @Controller('urls')
 export class UrlsController {
   constructor(private readonly urlsService: UrlsService) { }
 
   @Post()
-  create(@Body() createUrlDto: CreateUrlDto, @User() user?: UserPrisma,) {
+  @UseGuards(OptionalJwtAuthGuard)
+  create(@Body() createUrlDto: CreateUrlDto, @User() user?: UserPrisma) {
     return this.urlsService.create(createUrlDto, user);
   }
 
@@ -23,8 +26,9 @@ export class UrlsController {
   }
 
   @Get()
-  findAll() {
-    return this.urlsService.findAll();
+  @UseGuards(AuthGuard)
+  findAll(@User() user: UserPrisma) {
+    return this.urlsService.findAll(user.id);
   }
 
   @Get(':id')

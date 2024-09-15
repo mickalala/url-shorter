@@ -12,8 +12,12 @@ export class UrlsService {
     private readonly UrlsRepository: UrlsRepository) { }
 
   async create(createUrlDto: CreateUrlDto, user?: User) {
-    let userId = user?.id;
-    if (!user) userId = null;
+    let userId;
+    if (!user) {
+      userId = null; 
+    } else {
+      userId = user.id;
+    }
     const generatedId = nanoid(5);
     const shortUrl = `http://localhost/${generatedId}`;
 
@@ -30,8 +34,10 @@ export class UrlsService {
     return url.url;
   }
 
-  findAll() {
-    return `This action returns all urls`;
+  findAll(userId: number) {
+    if (!userId) userId = null;
+    const urls = this.UrlsRepository.findAll(userId);
+    return urls;
   }
 
   findOne(id: number) {

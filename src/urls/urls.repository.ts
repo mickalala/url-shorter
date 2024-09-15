@@ -18,9 +18,10 @@ export class UrlsRepository {
         })
     }
 
-    async findAll() {
-        const urls = await this.prisma.urls.findMany();
-
+    async findAll(userId: number) {
+        const urls = await this.prisma.urls.findMany({
+            where: { userId }
+        });
         return urls
     }
 
@@ -30,6 +31,7 @@ export class UrlsRepository {
         });
         return url;
     }
+    
     async findOne(id: number) {
         const url = await this.prisma.urls.findUnique({
             where: { id }
@@ -42,11 +44,11 @@ export class UrlsRepository {
 
     update(id: number, updateUrlDto: UpdateUrlDto) {
         return this.prisma.urls.update({
-          where: { id },
-          data: {
-            ...updateUrlDto,
-            updatedAt: new Date()
-          }
+            where: { id },
+            data: {
+                ...updateUrlDto,
+                updatedAt: new Date()
+            }
         })
     }
 

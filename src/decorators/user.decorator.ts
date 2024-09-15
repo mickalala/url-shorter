@@ -5,10 +5,9 @@ export const User = createParamDecorator((data: string, context: ExecutionContex
   const response = context.switchToHttp().getResponse<Response>();
   const { user } = response.locals;
 
-  // if (!user) {
-  //   if (user == undefined) return;
-  //   throw new NotFoundException("User not found.");
-  // }
+  if (!user) {
+    user == null;
+  }
 
   return user;
 })
