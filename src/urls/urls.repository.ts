@@ -22,7 +22,7 @@ export class UrlsRepository {
         const urls = await this.prisma.urls.findMany({
             where: { userId }
         });
-        return urls
+        return urls;
     }
 
     async findOneUrl(shortUrl: string) {
@@ -36,9 +36,7 @@ export class UrlsRepository {
         const url = await this.prisma.urls.findUnique({
             where: { id }
         });
-        return {
-            ...url
-        }
+        return url;
     }
 
 
@@ -53,8 +51,11 @@ export class UrlsRepository {
     }
 
     remove(id: number) {
-        return this.prisma.urls.delete({
-            where: { id }
+        return this.prisma.urls.update({
+            where: { id },
+            data: {
+                deletedAt: new Date()
+            }
         });
     }
 }

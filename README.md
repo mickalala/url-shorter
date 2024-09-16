@@ -1,3 +1,50 @@
+# Url Shorter 
+URL Shorter is a RESTful API where links are modified to smaller links. It's a back-end project where the user can register, login and some routes are authenticated.
+
+## Features
+
+- [x] Sign-Up (localhost:3000/signup)
+- [x] Sign-In(localhost:3000/signin)
+- [x] Create shorter url(localhost:3000/urls)
+- [x] Acces to shorter url(localhost:3000/:code)
+- [x] Get All user urls(localhost:3000/urls/all)
+- [x] Update user urls(localhost:3000/urls/:id)
+- [x] Delete user urls(localhost:3000/urls/:id)
+- [ ] Tests
+
+
+## How to use
+1. Clone this repository
+2. Install dependencies
+```bash
+$ npm i
+```
+
+3. Setup your environment variables (.env)
+
+4. Create your database with prisma
+```bash
+$ npx prisma migrate dev
+$ npx prisma generate
+```
+
+5. Run the app as developer mode
+```bash
+# development
+$ npm run dev
+```
+
+6. Build the app
+```bash
+#production
+$ npm run build
+```
+7. start
+```bash
+#production
+$ npm run start
+```
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
@@ -19,8 +66,7 @@
     <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
   <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
 </p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+
 
 ## Description
 

@@ -14,12 +14,12 @@ export class UrlsService {
   async create(createUrlDto: CreateUrlDto, user?: User) {
     let userId;
     if (!user) {
-      userId = null; 
+      userId = null;
     } else {
       userId = user.id;
     }
     const generatedId = nanoid(5);
-    const shortUrl = `http://localhost/${generatedId}`;
+    const shortUrl = `http://localhost:3000/${generatedId}`;
 
     return this.UrlsRepository.create({ ...createUrlDto }, userId, shortUrl);
   }
@@ -34,21 +34,36 @@ export class UrlsService {
     return url.url;
   }
 
-  findAll(userId: number) {
+  async findAll(userId: number) {
     if (!userId) userId = null;
-    const urls = this.UrlsRepository.findAll(userId);
-    return urls;
+    const urls = await this.UrlsRepository.findAll(userId);
+    if (urls.length === 0) {
+        throw new NotFoundException('URLs not found');
+    }
+    const notDeletedUrls = urls.filter((url) => url.deletedAt === null);
+    if (notDeletedUrls.length === 0) {
+        throw new NotFoundException('No URLs found that have not been deleted');
+    }
+    return notDeletedUrls; }
+
+  async findOne(id: number) {
+    const url = await this.UrlsRepository.findOne(id);
+    if (!url) throw new NotFoundException('URL not found');
+    if (url.deletedAt !== null) throw new NotFoundException('URL not found');
+    return url;
   }
 
-  findOne(id: number) {
-    return
+  async update(id: number, updateUrlDto: UpdateUrlDto) {
+    const url = await this.UrlsRepository.findOne(id);
+    if (!url) throw new NotFoundException('URL not found');
+    if (url.deletedAt !== null) throw new NotFoundException('URL not found');
+    return this.UrlsRepository.update(id, updateUrlDto);
   }
 
-  update(id: number, updateUrlDto: UpdateUrlDto) {
-    return `This action updates a #${id} url`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} url`;
+  async remove(id: number) {
+    const url = await this.UrlsRepository.findOne(id);
+    if (!url) throw new NotFoundException('URL not found');
+    if (url.deletedAt !== null) throw new NotFoundException('URL not found');
+    return this.UrlsRepository.remove(id);
   }
 }

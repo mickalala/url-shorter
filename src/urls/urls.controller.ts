@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Redirect, Header, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { UrlsService } from './urls.service';
 import { CreateUrlDto } from './dto/create-url.dto';
 import { UpdateUrlDto } from './dto/update-url.dto';
@@ -17,31 +17,26 @@ export class UrlsController {
     return this.urlsService.create(createUrlDto, user);
   }
 
-  @Get('/short/:shortUrlId')
-  @Redirect('', 301)
-  @Header('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate')
-  async redirectToOriginalUrl(@Param('shortUrlId') shortUrlId: string) {
-    const originalUrl = await this.urlsService.findOriginalUrl(`http://localhost/${shortUrlId}`);
-    return { url: originalUrl };
-  }
-
-  @Get()
+  @Get('/all')
   @UseGuards(AuthGuard)
   findAll(@User() user: UserPrisma) {
     return this.urlsService.findAll(user.id);
   }
 
   @Get(':id')
+  @UseGuards(AuthGuard)
   findOne(@Param('id') id: string) {
     return this.urlsService.findOne(+id);
   }
 
   @Patch(':id')
+  @UseGuards(AuthGuard)
   update(@Param('id') id: string, @Body() updateUrlDto: UpdateUrlDto) {
     return this.urlsService.update(+id, updateUrlDto);
   }
 
   @Delete(':id')
+  @UseGuards(AuthGuard)
   remove(@Param('id') id: string) {
     return this.urlsService.remove(+id);
   }

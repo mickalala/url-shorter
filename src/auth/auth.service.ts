@@ -46,6 +46,9 @@ export class AuthService {
   }
 
   checkToken(token: string) {
+    if (!token) {
+      throw new UnauthorizedException('Token not provided');
+  }
     try {
       const data = this.jwtService.verify(token, {
         audience: this.AUDIENCE,
