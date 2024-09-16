@@ -12,12 +12,7 @@ export class UrlsService {
     private readonly UrlsRepository: UrlsRepository) { }
 
   async create(createUrlDto: CreateUrlDto, user?: User) {
-    let userId;
-    if (!user) {
-      userId = null;
-    } else {
-      userId = user.id;
-    }
+    const userId = user ? user.id : null;
     const generatedId = nanoid(5);
     const shortUrl = `http://localhost:3000/${generatedId}`;
 

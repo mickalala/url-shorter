@@ -2,12 +2,14 @@ import { ConflictException, Injectable, NotFoundException } from '@nestjs/common
 import { UsersRepository } from './users.repository';
 import SignUpDto from './dtos/signup.dto';
 import { User } from '@prisma/client';
+import { BcryptService } from 'src/crypto/bcrypt.service';
 
 @Injectable()
 export class UsersService {
 
     constructor(
         private readonly usersRepository: UsersRepository,
+        private readonly bcrypt: BcryptService
     ) { }
 
     async create(signUpDto: SignUpDto) {
@@ -16,16 +18,13 @@ export class UsersService {
         if (user) throw new ConflictException("E-mail already in use.");
 
         return this.usersRepository.create({
-            ...signUpDto
+            ...signUpDto,
+            password: this.bcrypt.hash(signUpDto.password)
         });
     }
 
     async isMatchForPassword(user: User, password: string) {
-        if (user.password === password) {
-            return true
-        } else {
-            return false
-        };
+        return await this.bcrypt.compare(password, user.password)
     }
 
     async getById(id: number) {

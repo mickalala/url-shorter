@@ -26,7 +26,7 @@ export class AuthService {
     const user = await this.usersService.getByEmail(email);
     if (!user) throw new UnauthorizedException(`Email or password not valid.`);
 
-    const isMatch = this.usersService.isMatchForPassword(user, password);
+    const isMatch = await this.usersService.isMatchForPassword(user, password);
     if (!isMatch) throw new UnauthorizedException(`Email or password not valid.`);
 
     return this.createToken(user);

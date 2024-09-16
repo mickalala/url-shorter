@@ -6,10 +6,11 @@ import { AuthModule } from './auth/auth.module';
 import { UrlsModule } from './urls/urls.module';
 import { UrlsService } from './urls/urls.service';
 import { UrlsRepository } from './urls/urls.repository';
+import { CryptoModule } from './crypto/crypto.module';
 
 @Module({
-  imports: [PrismaModule, AuthModule, UrlsModule],
+  imports: [PrismaModule, AuthModule, UrlsModule, CryptoModule],
   controllers: [AppController],
-  providers: [AppService,UrlsService, UrlsRepository],
+  providers: [AppService, UrlsService, UrlsRepository],
 })
-export class AppModule {}
+export class AppModule { }
